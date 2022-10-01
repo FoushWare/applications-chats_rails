@@ -4,11 +4,9 @@ Rails.application.routes.draw do
   # Routes REST API for the application
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
-      resources :applications, only: [:index, :create, :show, :update, :destroy] do
-        resources :chats, only: [:index, :create, :show, :update, :destroy] do
-          resources :messages, only: [:index, :create, :show, :update, :destroy]
-        end
-      end
+      resources :applications, only: [:index, :create, :show, :update, :destroy]
+      resources :chats, only: [:index, :create, :show, :update, :destroy]
+      resources :messages, only: [:index, :create, :show, :update, :destroy]
     end
   end
 end

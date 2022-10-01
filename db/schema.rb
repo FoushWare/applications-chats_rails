@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2022_09_30_230608) do
   end
 
   create_table "chats", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "name"
     t.integer "number"
     t.integer "application_id"
     t.integer "messages_count", default: 0
