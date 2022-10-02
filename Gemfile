@@ -10,6 +10,7 @@ gem "mysql2", ">= 0.4.4", "< 0.6.0"
 # Use Puma as the app server
 gem "puma", "~> 3.11"
 gem "sidekiq"
+gem "sinatra"
 gem "redis-rails"
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
@@ -17,7 +18,9 @@ gem "redis-rails"
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
+# Elastic Search
+gem "elasticsearch-model", github: "elastic/elasticsearch-rails", branch: "5.x"
+gem "elasticsearch-rails", github: "elastic/elasticsearch-rails", branch: "5.x"
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 

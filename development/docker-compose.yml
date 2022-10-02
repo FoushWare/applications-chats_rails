@@ -11,8 +11,6 @@ services:
       - '3306'
     volumes:
       - db:/var/run/mysqld
-    logging:
-      driver: none
     ports:
       - "33061:3306"
   redis:
@@ -22,8 +20,6 @@ services:
       - redis:/data
     ports:
       - 6379
-    logging:
-      driver: none
   web:
     build: ../
     command: bundle exec rails s -p 3000 -e development -b '0.0.0.0'
@@ -56,8 +52,14 @@ services:
       RAILS_ENV: development
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      DB_NAME: ecs_application_db
+      DB_PORT: 3306
+      DB_HOST: db
     depends_on:
       - "redis"
+      - "db"
 volumes:
   db:
   bundle:

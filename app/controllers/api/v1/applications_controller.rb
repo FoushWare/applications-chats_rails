@@ -1,21 +1,13 @@
 class Api::V1::ApplicationsController < ApplicationController
+  # require application Worker
+
   # Resource for the API to create a new application
   # POST /api/v1/applications
   def create
     # Create a new application
-    @application = Application.new(application_params)
-
-    # if there is not erros before save generate a token and save the application
-    @application.token = SecureRandom.hex(10)
-
-    # Save the application
-    if @application.save
-      # Return the application
-      render json: @application, status: :created
-    else
-      # Return the errors
-      render json: @application.errors, status: :unprocessable_entity
-    end
+    CreateApplicationWorker.perform_async(params[:name])
+    # return the application if it is created
+    render json: "application created", status: :created
   end
 
   # Resource for the API to get all applications

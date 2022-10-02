@@ -207,4 +207,42 @@ class Api::V1::MessagesController < ApplicationController
       render json: { error: message.errors.full_messages }, status: :unprocessable_entity
     end
   end
+
+  # search in the messages of a chat
+  #  # GET /api/v1/messages/search/?application_token="...."&chat_number="...."&query="...."
+  def search
+    # Search in the messages of a chat
+    # Params:
+    #   application_token:
+    #   chat_number: number of the chat in that application (starts from 1)
+    #   query: the query to search for
+    # Returns:
+    #   messages: the messages that contain the query
+    #   application_token: token of the application
+    #   chat_number: number of the chat that the messages belong to
+
+    # Check if the application exists
+    # if it exists then check if the chat exists
+    # if it exists then search in the messages of the chat
+    # if it doesn't exist then return an error
+    # if the application doesn't exist then return an error
+    application = Application.find_by(token: params[:application_token])
+    if application.nil?
+      render json: { error: "Application not found" }, status: :not_found
+      return
+    end
+
+    chat = Chat.find_by(number: params[:chat_number], application_id: application.id)
+    if chat.nil?
+      render json: { error: "Chat not found" }, status: :not_found
+      return
+    end
+
+    messages = Message.where("chat_id = ? AND body LIKE ?", chat.id, "%#{params[:query]}%")
+    render json: { messages: messages, application_token: application.token, chat_number: chat.number }, status: :ok
+    # unless params[:query].blank?
+    #   @results = Message.search(params[:query])
+    #   render json: { messages: @results, application_token: application.token, chat_number: chat.number }, status: :ok
+    # end
+  end
 end

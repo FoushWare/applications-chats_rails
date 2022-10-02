@@ -11,6 +11,8 @@ WORKDIR /rails-app
 
 # Adding gems
 COPY Gemfile Gemfile
+ENV BUNDLER_VERSION=2.1.4
+RUN gem install bundler:2.1.4
 RUN bundle install
 RUN bundle --full-index
 
