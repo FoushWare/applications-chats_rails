@@ -238,11 +238,11 @@ class Api::V1::MessagesController < ApplicationController
       return
     end
 
-    messages = Message.where("chat_id = ? AND body LIKE ?", chat.id, "%#{params[:query]}%")
-    render json: { messages: messages, application_token: application.token, chat_number: chat.number }, status: :ok
-    # unless params[:query].blank?
-    #   @results = Message.search(params[:query])
-    #   render json: { messages: @results, application_token: application.token, chat_number: chat.number }, status: :ok
-    # end
+    # messages = Message.where("chat_id = ? AND body LIKE ?", chat.id, "%#{params[:query]}%")
+    # render json: { messages: messages, application_token: application.token, chat_number: chat.number }, status: :ok
+    unless params[:query].blank?
+      results = Message.search(params[:query])
+      render json: { messages: results, application_token: application.token, chat_number: chat.number }, status: :ok
+    end
   end
 end

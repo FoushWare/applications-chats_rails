@@ -19,11 +19,11 @@ gem "redis-rails"
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 # Elastic Search
-gem "elasticsearch-model", github: "elastic/elasticsearch-rails", branch: "5.x"
-gem "elasticsearch-rails", github: "elastic/elasticsearch-rails", branch: "5.x"
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
-
+# Elastic search model and rails
+gem "elasticsearch-model", github: "elastic/elasticsearch-rails", branch: "main"
+gem "elasticsearch-rails", github: "elastic/elasticsearch-rails", branch: "main"
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

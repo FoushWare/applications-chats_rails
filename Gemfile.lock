@@ -1,13 +1,13 @@
 GIT
   remote: https://github.com/elastic/elasticsearch-rails.git
-  revision: bfdd2243f0de298547b2dc199e9a671cf72ccde6
-  branch: 5.x
+  revision: 2b30cbade674ea89ed08d2a1124bd82336f27fd0
+  branch: main
   specs:
-    elasticsearch-model (5.1.0)
+    elasticsearch-model (7.2.1)
       activesupport (> 3)
-      elasticsearch (~> 5)
+      elasticsearch (~> 7)
       hashie
-    elasticsearch-rails (5.1.0)
+    elasticsearch-rails (7.2.1)
 
 GEM
   remote: https://rubygems.org/
@@ -61,19 +61,38 @@ GEM
     concurrent-ruby (1.1.10)
     connection_pool (2.3.0)
     crass (1.0.6)
-    elasticsearch (5.0.5)
-      elasticsearch-api (= 5.0.5)
-      elasticsearch-transport (= 5.0.5)
-    elasticsearch-api (5.0.5)
+    elasticsearch (7.17.1)
+      elasticsearch-api (= 7.17.1)
+      elasticsearch-transport (= 7.17.1)
+    elasticsearch-api (7.17.1)
       multi_json
-    elasticsearch-transport (5.0.5)
-      faraday
+    elasticsearch-transport (7.17.1)
+      faraday (~> 1)
       multi_json
     erubi (1.11.0)
-    faraday (2.5.2)
-      faraday-net_http (>= 2.0, < 3.1)
+    faraday (1.10.2)
+      faraday-em_http (~> 1.0)
+      faraday-em_synchrony (~> 1.0)
+      faraday-excon (~> 1.1)
+      faraday-httpclient (~> 1.0)
+      faraday-multipart (~> 1.0)
+      faraday-net_http (~> 1.0)
+      faraday-net_http_persistent (~> 1.0)
+      faraday-patron (~> 1.0)
+      faraday-rack (~> 1.0)
+      faraday-retry (~> 1.0)
       ruby2_keywords (>= 0.0.4)
-    faraday-net_http (3.0.0)
+    faraday-em_http (1.0.0)
+    faraday-em_synchrony (1.0.0)
+    faraday-excon (1.1.0)
+    faraday-httpclient (1.0.1)
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
+    faraday-net_http (1.0.1)
+    faraday-net_http_persistent (1.2.0)
+    faraday-patron (1.0.0)
+    faraday-rack (1.0.0)
+    faraday-retry (1.0.3)
     ffi (1.15.5)
     globalid (1.0.0)
       activesupport (>= 5.0)
@@ -96,6 +115,7 @@ GEM
     minitest (5.16.3)
     msgpack (1.6.0)
     multi_json (1.15.0)
+    multipart-post (2.2.3)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
     mysql2 (0.5.4)
