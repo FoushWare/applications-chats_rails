@@ -34,14 +34,21 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       BUNDLE_PATH: /bundle
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+
     volumes:
       - ../:/rails-app
       - bundle:/bundle
     ports:
       - "3000:3000"
+    links:
+      - db
+      - redis
+      - elasticsearch
     depends_on:
       - "db"
       - "redis"
+      - "elasticsearch"
 
   sidekiq:
     build: ../
@@ -61,17 +68,22 @@ services:
       - "redis"
       - "db"
   elasticsearch:
-    image: elasticsearch:7.8.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
     ports:
       - 9200:9200
     environment:
-      - discovery.type=single-node
-      - cluster.name=elasticsearch
+      - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
+      - xpack.graph.enabled=false
+      - xpack.watcher.enabled=false
+      - discovery.type=single-node
+      - cluster.routing.allocation.disk.threshold_enabled=false
+      
   kibana:
-    image: kibana:7.8.1
+    image: docker.elastic.co/kibana/kibana:7.6.0
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
     ports:
