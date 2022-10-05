@@ -5,9 +5,6 @@ class CreateApplicationWorker
   sidekiq_options :retry => false
 
   def perform(name)
-    # Create a new application
-    # @application = Application.new(name: name)
-    # make name required
     @application = Application.new(
       name: name,
     )
@@ -17,8 +14,6 @@ class CreateApplicationWorker
 
     # Save the application
     if @application.save
-      # return the application
-      # ApplicationController.render json: @application, status: :created
     else
       raise "Error"
       # Rasie an error

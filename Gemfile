@@ -24,6 +24,8 @@ gem "redis-rails"
 # Elastic search model and rails
 gem "elasticsearch-model", github: "elastic/elasticsearch-rails", branch: "main"
 gem "elasticsearch-rails", github: "elastic/elasticsearch-rails", branch: "main"
+# elastic DSL
+gem "elasticsearch-dsl"
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

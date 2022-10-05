@@ -66,6 +66,7 @@ GEM
       elasticsearch-transport (= 7.17.1)
     elasticsearch-api (7.17.1)
       multi_json
+    elasticsearch-dsl (0.1.10)
     elasticsearch-transport (7.17.1)
       faraday (~> 1)
       multi_json
@@ -212,6 +213,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (>= 1.1.0)
   byebug
+  elasticsearch-dsl
   elasticsearch-model!
   elasticsearch-rails!
   listen (>= 3.0.5, < 3.2)

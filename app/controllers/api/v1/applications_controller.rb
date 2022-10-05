@@ -5,9 +5,15 @@ class Api::V1::ApplicationsController < ApplicationController
   # POST /api/v1/applications
   def create
     # Create a new application
-    CreateApplicationWorker.perform_async(params[:name])
-    # return the application if it is created
-    render json: "application created", status: :created
+    CreateApplicationWorker.perform_async(application_params.to_h)
+
+    # read from redis cache
+    # op2 = $redis.get(application_params[:name])
+
+    # if op2 is not nil return the application
+    # if op2
+    # render json: { token: op2 }, status: :created
+    # end
   end
 
   # Resource for the API to get all applications

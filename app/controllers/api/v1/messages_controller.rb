@@ -232,17 +232,20 @@ class Api::V1::MessagesController < ApplicationController
       return
     end
 
-    chat = Chat.find_by(number: params[:chat_number], application_id: application.id)
-    if chat.nil?
-      render json: { error: "Chat not found" }, status: :not_found
-      return
-    end
+    # chat = Chat.find_by(number: params[:chat_number], application_id: application.id)
+    # if chat.nil?
+    #   render json: { error: "Chat not found" }, status: :not_found
+    #   return
+    # end
 
     # messages = Message.where("chat_id = ? AND body LIKE ?", chat.id, "%#{params[:query]}%")
     # render json: { messages: messages, application_token: application.token, chat_number: chat.number }, status: :ok
     unless params[:query].blank?
-      results = Message.search(params[:query])
-      render json: { messages: results, application_token: application.token, chat_number: chat.number }, status: :ok
+      puts "query:----------------------------> #{params[:query]}"
+      # search in the messages of the chat
+      results = Message.searchMessages(params[:query])
+      render json: { result: results }, status: :ok
+      # render json: { messages: results, application_token: application.token, chat_number: chat.number }, status: :ok
     end
   end
 end
