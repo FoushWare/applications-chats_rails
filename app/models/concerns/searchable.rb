@@ -11,7 +11,7 @@ module Searchable
 
     def as_indexed_json(options = {})
       self.as_json(
-        only: [:body],
+        only: [:body, :application_token, :chat_id],
       )
     end
 
@@ -20,26 +20,30 @@ module Searchable
       params = {
         # i want to search for each character in the query
         query: {
-          bool: {
-            must: {
-              #  the query should be in the body of the message and the chat number should be the same and the application token should be the same
-              multi_match: {
-                query: query,
-                fields: ["body"],
-              },
-            },
-            filter: [
-              {
-                term: {
-                  chat_id: chatNumber,
-                },
-              },
-              {
-                term: {
-                  application_token: token,
-                },
-              },
-            ],
+          multi_match: {
+            query: query,
+            fields: ["body"],
+
+          # bool: {
+          #   must: {
+          #     #  the query should be in the body of the message and the chat number should be the same and the application token should be the same
+          #     multi_match: {
+          #       query: query,
+          #       fields: ["body"],
+          #     },
+          #   },
+          # filter: [
+          #   {
+          #     term: {
+          #       chat_id: chatNumber,
+          #     },
+          #   },
+          #   {
+          #     term: {
+          #       application_token: token,
+          #     },
+          #   },
+          # ],
           },
         },
       }
