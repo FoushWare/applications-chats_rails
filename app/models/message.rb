@@ -9,18 +9,36 @@ class Message < ApplicationRecord
   before_update :lock_all_rows
   #  after the message creation , update the chat messages_count
   after_create :update_chat_messages_count
+  # after the message is destroyed, update the chat messages_count
+  after_destroy :update_chat_messages_count_destroy
 
   def lock_all_rows
     #  Lock all rows by pessimistic locking
     Message.lock.count # lock all rows by pessimistic locking
+    # get the last message number and increment it by 1
+    last_message = Message.lock.last
+    if last_message.nil?
+      self.number = 1
+    else
+      self.number = last_message.number + 1
+    end
   end
 
   def update_chat_messages_count
     #  transaction to avoid the update of the chat messages_count
     Chat.transaction do
       #  update the chat messages_count
-      chat = Chat.find_by(id: chat_id)
+      chat = Chat.find_by(number: chat_id)
       chat.update(messages_count: chat.messages_count + 1)
+    end
+  end
+
+  def update_chat_messages_count_destroy
+    #  transaction to avoid the update of the chat messages_count
+    Chat.transaction do
+      #  update the chat messages_count
+      chat = Chat.find_by(nubmer: chat_id)
+      chat.update(messages_count: chat.messages_count - 1)
     end
   end
 
@@ -78,6 +96,8 @@ class Message < ApplicationRecord
   mappings dynamic: "false" do
     # custom analyzer
     indexes :body, analyzer: "customAnalyzer", index_options: "offsets", fields: { raw: { type: "text" } }
+    # make the chat_id searchable
+    indexes :chat_id, type: "integer"
   end
 
   # custom analyzer
@@ -86,7 +106,7 @@ class Message < ApplicationRecord
   Message.__elasticsearch__.refresh_index!
 
   # set the relation with the chat
-  belongs_to :chat
+  # belongs_to :chat
   # set the relation with the application
   # belongs_to :application
 end

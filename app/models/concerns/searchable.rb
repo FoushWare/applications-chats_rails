@@ -8,15 +8,6 @@ module Searchable
     include Elasticsearch::Model::Callbacks
 
     #-------- Config for Elastic search -------#
-    # settings index: {
-    #   number_of_shards: 2,
-    # } do
-    #   # mapping is the schema for the index
-    #   mappings dynamic: "false" do
-    #     # custom analyzer
-    #     indexes :body, analyzer: "english", index_options: "offsets", fields: { raw: { type: "text" } }
-    #   end
-    # end
 
     def as_indexed_json(options = {})
       self.as_json(
@@ -25,16 +16,32 @@ module Searchable
     end
 
     # searchMessages function
-    def self.searchMessages(query)
+    def self.searchMessages(query, token, chatNumber)
       params = {
         # i want to search for each character in the query
         query: {
-          multi_match: {
-            query: query,
-            fields: ["body"],
+          bool: {
+            must: {
+              #  the query should be in the body of the message and the chat number should be the same and the application token should be the same
+              multi_match: {
+                query: query,
+                fields: ["body"],
+              },
+            },
+            filter: [
+              {
+                term: {
+                  chat_id: chatNumber,
+                },
+              },
+              {
+                term: {
+                  application_token: token,
+                },
+              },
+            ],
           },
         },
-
       }
 
       self.__elasticsearch__.search(params)

@@ -19,18 +19,15 @@ class Api::V1::ChatsController < ApplicationController
     end
 
     # Create a new chat
-    chat = Chat.new(name: params[:name], application_id: @application.id)
-    # change the number of the chat for this specific application to the number of chats for this application + 1
-    # chat.number = @application.chats.where(application_id: @application.id).count + 1
-    chat.number = @application.chat_counts + 1
+    @chat = Chat.new(name: params[:name], application_id: @application.id)
 
     # transaction to save the chat
     Chat.transaction do
-      @chatSave = chat.save!
+      @chatSave = @chat.save!
     end
 
     if @chatSave
-      render json: { chat_number: chat.number, application_token: @application.token }, status: :created
+      render json: { chat_number: @chat.number, application_token: @application.token }, status: :created
     else
       render json: { error: chat.errors.full_messages }, status: :unprocessable_entity
     end
@@ -158,18 +155,6 @@ class Api::V1::ChatsController < ApplicationController
     # Delete the chat
     if chat.destroy
       # decrease the number of the chats for this application by 1
-      application.chats.where(application_id: application.id).each do |chat|
-        # if the chat number is greater than the deleted chat number, decrease the chat number by 1
-        if chat.number > params[:id].to_i
-          chat.number = chat.number - 1
-          chat.save
-        end
-      end
-
-      # decrease the number of the chats for this application by 1
-      application.chat_counts = application.chat_counts - 1
-      application.save
-
       render json: { chat: chat, application_token: application.token }, status: :ok
     else
       render json: { error: chat.errors.full_messages }, status: :unprocessable_entity

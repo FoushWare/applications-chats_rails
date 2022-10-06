@@ -28,8 +28,7 @@ class Api::V1::MessagesController < ApplicationController
       return
     end
 
-    @message = Message.new(body: params[:body], chat_id: chat.id)
-    @message.number = chat.messages_count + 1
+    @message = Message.new(body: params[:body], chat_id: chat.number)
     @message.application_token = application.token
 
     # transaction is used to make sure that the message is created and the chat is updated
@@ -117,7 +116,7 @@ class Api::V1::MessagesController < ApplicationController
       return
     end
 
-    message = Message.find_by(number: params[:id], chat_id: chat.id)
+    message = Message.find_by(number: params[:id], chat_id: chat.number)
     if message.nil?
       render json: { error: "Message not found" }, status: :not_found
     else
@@ -161,7 +160,7 @@ class Api::V1::MessagesController < ApplicationController
       return
     end
 
-    message = Message.find_by(number: params[:message_number], chat_id: chat.id)
+    message = Message.find_by(number: params[:message_number], chat_id: chat.number)
     if message.nil?
       render json: { error: "Message not found" }, status: :not_found
       return
@@ -204,24 +203,13 @@ class Api::V1::MessagesController < ApplicationController
       return
     end
 
-    message = Message.find_by(number: params[:message_number], chat_id: chat.id)
+    message = Message.find_by(number: params[:id], chat_id: chat.number)
     if message.nil?
       render json: { error: "Message not found" }, status: :not_found
       return
     end
 
     if message.destroy
-      # Update the numbers of the messages after the deleted message
-      messages = Message.where("chat_id = ? AND number > ?", chat.id, message.number)
-      messages.each do |message|
-        # if the message is the last message in the chat then update the last_message_number of the chat
-        if message.number == chat.last_message_number
-          chat.update(last_message_number: message.number - 1)
-        end
-        # update the number of the message by subtracting 1
-        message.update(number: message.number - 1)
-      end
-
       render json: { message_number: message.number, application_token: application.token, chat_number: chat.number }, status: :ok
     else
       render json: { error: message.errors.full_messages }, status: :unprocessable_entity
@@ -231,39 +219,9 @@ class Api::V1::MessagesController < ApplicationController
   # search in the messages of a chat
   #  # GET /api/v1/messages/search/?application_token="...."&chat_number="...."&query="...."
   def search
-    # Search in the messages of a chat
-    # Params:
-    #   application_token:
-    #   chat_number: number of the chat in that application (starts from 1)
-    #   query: the query to search for
-    # Returns:
-    #   messages: the messages that contain the query
-    #   application_token: token of the application
-    #   chat_number: number of the chat that the messages belong to
-
-    # Check if the application exists
-    # if it exists then check if the chat exists
-    # if it exists then search in the messages of the chat
-    # if it doesn't exist then return an error
-    # if the application doesn't exist then return an error
-    application = Application.find_by(token: params[:application_token])
-    if application.nil?
-      render json: { error: "Application not found" }, status: :not_found
-      return
-    end
-
-    # chat = Chat.find_by(number: params[:chat_number], application_id: application.id)
-    # if chat.nil?
-    #   render json: { error: "Chat not found" }, status: :not_found
-    #   return
-    # end
-
-    # messages = Message.where("chat_id = ? AND body LIKE ?", chat.id, "%#{params[:query]}%")
-    # render json: { messages: messages, application_token: application.token, chat_number: chat.number }, status: :ok
     unless params[:query].blank?
-      puts "query:----------------------------> #{params[:query]}"
       # search in the messages of the chat
-      results = Message.searchMessages(params[:query])
+      results = Message.searchMessages(params[:query], params[:application_token], params[:chat_number])
       render json: { result: results }, status: :ok
       # render json: { messages: results, application_token: application.token, chat_number: chat.number }, status: :ok
     end
