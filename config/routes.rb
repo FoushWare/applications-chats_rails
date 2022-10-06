@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   # Routes REST API for the application
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
-      resources :applications, only: [:index, :create, :show, :update, :destroy]
+      resources :applications, only: [:index, :create, :show, :update, :destroy], param: :token
       resources :chats, only: [:index, :create, :show, :update, :destroy]
       resources :messages, only: [:index, :create, :show, :update, :destroy]
       # search route in messages

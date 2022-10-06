@@ -21,7 +21,7 @@
 
 > Note : i first used sidekiq and redis for background jobs and caching but i found it was not the best solution for this project as i can't render json in background jobs and i can't cache the json response and return [,number ] when create
 
-[workder](ReadMeAssets/sidekiq_01.png)
+![workder](ReadMeAssets/sidekiq_01.png)
 
 - chats and messages
 
@@ -50,20 +50,36 @@
 
 ```
 
+- get specific Application
+
+```
+	Method : GET
+	Url    : http://localhost:3000/api/v1/applications/:token
+	Example:
+	Response:
+{
+    "token": "2576d3998967f5466478",
+    "name": "test01 update",
+    "chats_count": 0
+}
+
+```
+
 - update Application
 
 ```
 	Method : PUT
-	Url    : http://localhost:3000/api/v1/appapplications/:token
+	Url   : http://localhost:3000/api/v1/appapplications/:token
 	Example:
 	Body
 	{
 		"name" :"test1 updated"
 	}
 	Response:
-	{
-		token : "da27a6be03637ae2bd7b"
-	}
+{
+    "token": "2576d3998967f5466478",
+    "name": "test01 update"
+}
 
 ```
 
@@ -128,31 +144,16 @@
 {
     "chats": [
         {
-            "id": 4,
             "name": "chat 3 test create",
             "number": 1,
-            "application_id": 2,
-            "messages_count": 0,
-            "created_at": "2022-10-01T13:28:42.000Z",
-            "updated_at": "2022-10-01T13:28:42.000Z"
         },
         {
-            "id": 5,
             "name": "chat 2 test create",
             "number": 2,
-            "application_id": 2,
-            "messages_count": 0,
-            "created_at": "2022-10-01T13:28:50.000Z",
-            "updated_at": "2022-10-01T13:28:50.000Z"
         },
         {
-            "id": 6,
             "name": "chat 3 test create",
             "number": 3,
-            "application_id": 2,
-            "messages_count": 0,
-            "created_at": "2022-10-01T14:48:37.000Z",
-            "updated_at": "2022-10-01T14:48:37.000Z"
         }
     ],
     "application_token": "2bdd678063010adc6ac4"

@@ -12,22 +12,25 @@ class Api::V1::ChatsController < ApplicationController
     # application_token: token of the application
 
     # Check if the application exists
-    application = Application.find_by(token: params[:application_token])
-    if application.nil?
+    @application = Application.find_by(token: params[:application_token])
+    if @application.nil?
       render json: { error: "Application not found" }, status: :not_found
       return
     end
 
     # Create a new chat
-    chat = Chat.new(name: params[:name], application_id: application.id)
+    chat = Chat.new(name: params[:name], application_id: @application.id)
     # change the number of the chat for this specific application to the number of chats for this application + 1
-    chat.number = application.chats.where(application_id: application.id).count + 1
+    # chat.number = @application.chats.where(application_id: @application.id).count + 1
+    chat.number = @application.chat_counts + 1
 
-    if chat.save
-      # after creating the chat , update the application chat_counts by 1
-      application.chat_counts = application.chat_counts + 1
-      application.save
-      render json: { chat_number: chat.number, application_token: application.token }, status: :created
+    # transaction to save the chat
+    Chat.transaction do
+      @chatSave = chat.save!
+    end
+
+    if @chatSave
+      render json: { chat_number: chat.number, application_token: @application.token }, status: :created
     else
       render json: { error: chat.errors.full_messages }, status: :unprocessable_entity
     end
@@ -113,8 +116,18 @@ class Api::V1::ChatsController < ApplicationController
     end
     # Update the chat
     chat.name = params[:name]
-    if chat.save
-      render json: { chat: chat, application_token: application.token }, status: :ok
+    # transaction to update the chat
+    Chat.transaction do
+      @chatSave = chat.save!
+    end
+
+    if @chatSave
+      # chat response is name, number
+      chatResponse = {
+        number: chat.number,
+        name: chat.name,
+      }
+      render json: { chat: chatResponse, application_token: application.token }, status: :ok
     else
       render json: { error: chat.errors.full_messages }, status: :unprocessable_entity
     end
