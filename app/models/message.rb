@@ -89,7 +89,7 @@ class Message < ApplicationRecord
   mappings dynamic: "false" do
     # custom analyzer
     indexes :body, analyzer: "customAnalyzer", index_options: "offsets", fields: { raw: { type: "text" } }
-    indexes :chat_id, type: "integer"
+    indexes :number, type: "integer"
     indexes :application_token, type: "text"
   end
 

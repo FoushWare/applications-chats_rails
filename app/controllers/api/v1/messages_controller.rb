@@ -28,16 +28,15 @@ class Api::V1::MessagesController < ApplicationController
       return
     end
 
-    @message = Message.new(body: params[:body], chat_id: chat.number)
+    @message = Message.new(body: params[:body], chat_id: chat.id)
     @message.application_token = application.token
-    # message number
-    lastMessag = chat.messages.last
-    if lastMessag.nil?
+    # update the number of the message based on the number of messages in the chat
+    @lastMsg = chat.messages.last
+    if @lastMsg.nil?
       @message.number = 1
     else
-      @message.number = lastMessag.number + 1
+      @message.number = @lastMsg.number + 1
     end
-
     # transaction is used to make sure that the message is created and the chat is updated
     # if one of them fails then the other one is rolled back
     Message.transaction do
@@ -229,8 +228,11 @@ class Api::V1::MessagesController < ApplicationController
     unless params[:query].blank?
       # search in the messages of the chat
       results = Message.searchMessages(params[:query], params[:application_token], params[:chat_number])
-      render json: { result: results }, status: :ok
-      # render json: { messages: results, application_token: application.token, chat_number: chat.number }, status: :ok
+      if results.nil?
+        render json: { error: "Chat not found" }, status: :not_found
+      else
+        render json: { result: results }, status: :ok
+      end
     end
   end
 end

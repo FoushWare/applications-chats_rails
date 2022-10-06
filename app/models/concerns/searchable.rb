@@ -11,7 +11,7 @@ module Searchable
 
     def as_indexed_json(options = {})
       self.as_json(
-        only: [:body, :chat_id, :application_token],
+        only: [:body, :number, :application_token],
       )
     end
 
@@ -44,7 +44,6 @@ module Searchable
 
     # searchMessages function
     def self.searchMessages(query, token, chatNumber)
-      puts "000000000000000000000000000000 #{query} #{token} #{chatNumber}"
       params = {
         # i want the search based on finding the query in the body of the message
         # and the chat_id and the application_token of the message should be the same as the ones in the params [token, chatNumber]
@@ -58,7 +57,7 @@ module Searchable
               },
               {
                 match: {
-                  chat_id: chatNumber,
+                  number: chatNumber,
                 },
               },
               {
@@ -69,9 +68,11 @@ module Searchable
             ],
           },
         },
+        # specify the fields that i want to return
+        _source: ["body"],
       }
-
-      self.__elasticsearch__.search(params)
+      # get the results of the search and get only the body of the message
+      self.__elasticsearch__.search(params).results.map { |result| result._source.body }
     end
   end
 end

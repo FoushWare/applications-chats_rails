@@ -4,13 +4,13 @@
 
 - Installation and setup
 
-  - using Docker composer
+  - using Docker composer to build and run the application
 
   ```
   cd development && docker-compose build && docker-compose up
   ```
 
-  - create the database
+  - create the database and migration from the development directory
 
   ```
   docker-compose run web rails db:create && docker-compose run web rails db:migrate
@@ -29,6 +29,26 @@
 # API documentation
 
 ### Elastic search search Api
+
+```
+- End point: http://localhost:3000/api/v1/messages/search/:query/?application_token=7d9ff754f6b4143e5386&chat_number=12
+
+- Method: GET
+
+- Params:
+
+  - query: search query
+  - application_token: application token
+  - chat_number: chat number
+
+- Response:
+
+{
+"result": [
+"zico max 2 lol"
+]
+}
+```
 
 ### Application Api
 
