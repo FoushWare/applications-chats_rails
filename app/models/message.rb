@@ -96,8 +96,8 @@ class Message < ApplicationRecord
   mappings dynamic: "false" do
     # custom analyzer
     indexes :body, analyzer: "customAnalyzer", index_options: "offsets", fields: { raw: { type: "text" } }
-    # make the chat_id searchable
     indexes :chat_id, type: "integer"
+    indexes :application_token, type: "text"
   end
 
   # custom analyzer

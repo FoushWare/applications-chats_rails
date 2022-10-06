@@ -11,39 +11,62 @@ module Searchable
 
     def as_indexed_json(options = {})
       self.as_json(
-        only: [:body, :application_token, :chat_id],
+        only: [:body, :chat_id, :application_token],
       )
     end
 
+    #     GET messages / _search
+
+    # {
+    #   "query": {
+    #     "bool": {
+    #       "must": [
+    #         {
+    #           "match": {
+    #             "body": "zico",
+    #           },
+    #         },
+    #         {
+    #           "match": {
+    #             "chat_id": 18,
+    #           },
+
+    #         },
+    #         {
+    #           "match": {
+    #             "application_token": "169d53674ba5196250fd",
+    #           },
+    #         },
+    #       ],
+    #     },
+    #   },
+    # }
+
     # searchMessages function
     def self.searchMessages(query, token, chatNumber)
+      puts "000000000000000000000000000000 #{query} #{token} #{chatNumber}"
       params = {
-        # i want to search for each character in the query
+        # i want the search based on finding the query in the body of the message
+        # and the chat_id and the application_token of the message should be the same as the ones in the params [token, chatNumber]
         query: {
-          multi_match: {
-            query: query,
-            fields: ["body"],
-
-          # bool: {
-          #   must: {
-          #     #  the query should be in the body of the message and the chat number should be the same and the application token should be the same
-          #     multi_match: {
-          #       query: query,
-          #       fields: ["body"],
-          #     },
-          #   },
-          # filter: [
-          #   {
-          #     term: {
-          #       chat_id: chatNumber,
-          #     },
-          #   },
-          #   {
-          #     term: {
-          #       application_token: token,
-          #     },
-          #   },
-          # ],
+          bool: {
+            must: [
+              {
+                match: {
+                  body: query,
+                },
+              },
+              {
+                match: {
+                  chat_id: chatNumber,
+                },
+              },
+              {
+                match: {
+                  application_token: token,
+                },
+              },
+            ],
           },
         },
       }
