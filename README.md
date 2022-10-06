@@ -19,17 +19,9 @@
   - elasticsearch [elasticsearch] search engine
   - kibana [kibana] search engine dashboard
 
-> Note : i first used sidekiq and redis for background jobs and caching but i found it was not the best solution for this project as i can't render json in background jobs and i can't cache the json response and return [,number ] when create
-
-![workder](ReadMeAssets/sidekiq_01.png)
-
-- chats and messages
-
-> so i decided to use transctions and save the messages in the database and then render the json response
-
-> OR use locks and save the messages in the database and then render the json response
-
 # API documentation
+
+### Elastic search search Api
 
 ### Application Api
 
@@ -177,9 +169,10 @@
 	}
 	Response:
 	{
-			"message_number": 58,
-			"application_token": "da27a6be03637ae2bd7b",
-			"chat_number": 1
+    "message_number": 3,
+    "application_token": "b8b403f18849c6a4718a",
+    "body": "zico max 4",
+    "chat_number": 1
 	}
 ```
 
@@ -210,3 +203,13 @@
 }
 
 ```
+
+> Note : i first used sidekiq and redis for background jobs and caching but i found it was not the best solution for this project as i can't render json in background jobs and i can't cache the json response and return [,number ] when create
+
+![workder](ReadMeAssets/sidekiq_01.png)
+
+- chats and messages
+
+> so i decided to use transctions and save the messages in the database and then render the json response
+
+> OR use locks and save the messages in the database and then render the json response

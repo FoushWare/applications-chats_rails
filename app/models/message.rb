@@ -1,6 +1,30 @@
 require "elasticsearch/dsl"
 
 class Message < ApplicationRecord
+
+  # ------------------ Race condition ------------------#
+  #  before the message creation, lock all rows by pessimistic locking
+  before_create :lock_all_rows
+  #  before the message update, lock all rows by pessimistic locking
+  before_update :lock_all_rows
+  #  after the message creation , update the chat messages_count
+  after_create :update_chat_messages_count
+
+  def lock_all_rows
+    #  Lock all rows by pessimistic locking
+    Message.lock.count # lock all rows by pessimistic locking
+  end
+
+  def update_chat_messages_count
+    #  transaction to avoid the update of the chat messages_count
+    Chat.transaction do
+      #  update the chat messages_count
+      chat = Chat.find_by(id: chat_id)
+      chat.update(messages_count: chat.messages_count + 1)
+    end
+  end
+
+  # ---------------------------- Elasticsearch ----------------------------#
   # Elastic Searchable
   include Searchable
 
@@ -63,4 +87,6 @@ class Message < ApplicationRecord
 
   # set the relation with the chat
   belongs_to :chat
+  # set the relation with the application
+  # belongs_to :application
 end

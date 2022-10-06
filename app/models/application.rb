@@ -11,7 +11,7 @@ class Application < ApplicationRecord
   # set the relation with the chats
   has_many :chats, dependent: :destroy
   # set the relation with the messages
-  has_many :messages, through: :chats
+  has_many :messages, dependent: :destroy
 
   # Lock all rows by pessimistic locking
   def lock_all_rows
