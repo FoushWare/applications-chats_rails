@@ -50,8 +50,12 @@ class Api::V1::ChatsController < ApplicationController
     end
     # Get all the chats for this application
     chats = application.chats
+    chatsResponse = []
+    chats.each do |chat|
+      chatsResponse.push({ name: chat.name, number: chat.number })
+    end
 
-    render json: { chats: chats, application_token: application.token }, status: :ok
+    render json: { chats: chatsResponse, application_token: application.token }, status: :ok
   end
 
   # GET /api/v1/chats/:id/?application_token="...."

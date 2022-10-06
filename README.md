@@ -37,7 +37,7 @@
 
 ```
   Method : POST
-  Url    : http://localhost:3000/api/v1/app
+  Url    : http://localhost:3000/api/v1/appapplications
   Example:
 	Body
 	{
@@ -50,10 +50,162 @@
 
 ```
 
-### Chat Api
-
-### Chats Api
+- update Application
 
 ```
+	Method : PUT
+	Url    : http://localhost:3000/api/v1/appapplications/:token
+	Example:
+	Body
+	{
+		"name" :"test1 updated"
+	}
+	Response:
+	{
+		token : "da27a6be03637ae2bd7b"
+	}
+
+```
+
+- delete Application
+
+```
+	Method : DELETE
+	Url    : http://localhost:3000/api/v1/appapplications/:token
+	Example:
+	Response:
+	{
+		token : "da27a6be03637ae2bd7b"
+	}
+
+```
+
+### Chat Api
+
+- create chat with application token and chat name
+
+```
+	Method : POST
+	Url    : http://localhost:3000/api/v1/chats
+	Example:
+	Body
+	{
+		"application_token" :"da27a6be03637ae2bd7b",
+		"name" :"test chat"
+	}
+	Response:
+	{
+		  "chat_number": 2,
+    "application_token": "da27a6be03637ae2bd7b"
+	}
+
+```
+
+- get specific chat for specific application
+
+```
+	Method : GET
+	Url    : http://localhost:3000/api/v1/chats/:chat_number?application_token=da27a6be03637ae2bd7b
+	Example:
+	Response:
+	{
+		"chat": {
+        "number": 2,
+        "name": "chat 2 test create"
+    },
+    "application_token": "2bdd678063010adc6ac4"
+	}
+
+```
+
+- get all chats for specific application
+
+```
+	Method : GET
+	Url    : http://localhost:3000/api/v1/chats?application_token=da27a6be03637ae2bd7b
+	Example:
+	Response:
+{
+    "chats": [
+        {
+            "id": 4,
+            "name": "chat 3 test create",
+            "number": 1,
+            "application_id": 2,
+            "messages_count": 0,
+            "created_at": "2022-10-01T13:28:42.000Z",
+            "updated_at": "2022-10-01T13:28:42.000Z"
+        },
+        {
+            "id": 5,
+            "name": "chat 2 test create",
+            "number": 2,
+            "application_id": 2,
+            "messages_count": 0,
+            "created_at": "2022-10-01T13:28:50.000Z",
+            "updated_at": "2022-10-01T13:28:50.000Z"
+        },
+        {
+            "id": 6,
+            "name": "chat 3 test create",
+            "number": 3,
+            "application_id": 2,
+            "messages_count": 0,
+            "created_at": "2022-10-01T14:48:37.000Z",
+            "updated_at": "2022-10-01T14:48:37.000Z"
+        }
+    ],
+    "application_token": "2bdd678063010adc6ac4"
+}
+
+```
+
+### Messages Api
+
+- create new message
+
+```
+	Method : POST
+	Url    : http://localhost:3000/api/v1/messages
+	Example:
+	Body
+	{
+		"application_token" :"da27a6be03637ae2bd7b",
+		"chat_number" : 1,
+		"body" : "test message"
+	}
+	Response:
+	{
+			"message_number": 58,
+			"application_token": "da27a6be03637ae2bd7b",
+			"chat_number": 1
+	}
+```
+
+- get all Messages for specific chat
+
+```
+	Method : GET
+	Url    : http://localhost:3000/api/v1/messages?application_token=da27a6be03637ae2bd7b&chat_number=1
+	Example:
+	Response:
+	{
+    "messages": [
+        {
+            "number": 1,
+            "body": "message 1",
+        },
+        {
+            "number": 2,
+            "body": "message 2",
+        },
+        {
+            "number": 3,
+            "body": "message 2",
+        }
+    ],
+    "application_token": "d7e8048095db560a7ae9",
+    "chat_number": 1
+}
 
 ```

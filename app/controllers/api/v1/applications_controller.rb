@@ -5,15 +5,17 @@ class Api::V1::ApplicationsController < ApplicationController
   # POST /api/v1/applications
   def create
     # Create a new application
-    CreateApplicationWorker.perform_async(application_params.to_h)
+    @application = Application.new(application_params)
+    # if there is not erros before save generate a token and save the application
+    @application.token = SecureRandom.hex(10)
 
-    # read from redis cache
-    # op2 = $redis.get(application_params[:name])
-
-    # if op2 is not nil return the application
-    # if op2
-    # render json: { token: op2 }, status: :created
-    # end
+    # Save the application
+    if @application.save
+      # return only the token and status
+      render json: { token: @application.token }, status: :created
+    else
+      render json: @application.errors, status: :unprocessable_entity
+    end
   end
 
   # Resource for the API to get all applications
@@ -39,9 +41,8 @@ class Api::V1::ApplicationsController < ApplicationController
   # Resource for the API to update a specific application
   # PUT /api/v1/applications/:id
   def update
-    # Get the application
-    @application = Application.find(params[:id])
-
+    # Get the application by token
+    @application = Application.find_by(token: params[:id])
     # Update the application
     if @application.update(application_params)
       # Return the application
@@ -53,16 +54,23 @@ class Api::V1::ApplicationsController < ApplicationController
   end
 
   # Resource for the API to delete a specific application
-  # DELETE /api/v1/applications/:id
+  # DELETE /api/v1/applications/:token
   def destroy
-    # Get the application
-    @application = Application.find(params[:id])
-
+    # Get the application by token
+    @application = Application.find_by(token: params[:id])
+    # check if the application exists
+    if @application.nil?
+      render json: { error: "Application not found" }, status: :not_found
+      return
+    end
     # Delete the application
-    @application.destroy
-
-    # Return the application
-    render json: @application
+    if @application.destroy
+      # Return the application token
+      render json: { token: @application.token }, status: :ok
+    else
+      # Return the errors
+      render json: @application.errors, status: :unprocessable_entity
+    end
   end
 
   private
