@@ -30,6 +30,13 @@ class Api::V1::MessagesController < ApplicationController
 
     @message = Message.new(body: params[:body], chat_id: chat.number)
     @message.application_token = application.token
+    # message number
+    lastMessag = chat.messages.last
+    if lastMessag.nil?
+      @message.number = 1
+    else
+      @message.number = lastMessag.number + 1
+    end
 
     # transaction is used to make sure that the message is created and the chat is updated
     # if one of them fails then the other one is rolled back

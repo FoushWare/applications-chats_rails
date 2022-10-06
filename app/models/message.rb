@@ -15,13 +15,6 @@ class Message < ApplicationRecord
   def lock_all_rows
     #  Lock all rows by pessimistic locking
     Message.lock.count # lock all rows by pessimistic locking
-    # get the last message number and increment it by 1
-    last_message = Message.lock.last
-    if last_message.nil?
-      self.number = 1
-    else
-      self.number = last_message.number + 1
-    end
   end
 
   def update_chat_messages_count

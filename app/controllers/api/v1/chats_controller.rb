@@ -20,6 +20,12 @@ class Api::V1::ChatsController < ApplicationController
 
     # Create a new chat
     @chat = Chat.new(name: params[:name], application_id: @application.id)
+    lastChat = @application.chats.last
+    if lastChat.nil?
+      @chat.number = 1
+    else
+      @chat.number = lastChat.number + 1
+    end
 
     # transaction to save the chat
     Chat.transaction do

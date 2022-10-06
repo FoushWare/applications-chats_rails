@@ -10,6 +10,13 @@
   cd development && docker-compose build && docker-compose up
   ```
 
+  - create the database
+
+  ```
+  docker-compose run web rails db:create && docker-compose run web rails db:migrate
+
+  ```
+
 - Docker composer will create 6 containers
 
   - web [Ruby on Rails] Rest API

@@ -11,14 +11,6 @@ class Chat < ApplicationRecord
   def lock_all_rows
     # Lock all rows by pessimistic locking
     Chat.lock.count # lock all rows by pessimistic locking
-    # get the last chat number and increment it by 1
-    last_chat = Chat.lock.last
-    # if nil and same token then increment it by 1
-    if last_chat.nil?
-      self.number = 1
-    else
-      self.number = last_chat.number + 1
-    end
   end
 
   def update_application_chats_count
